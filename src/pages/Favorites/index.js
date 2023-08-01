@@ -20,12 +20,12 @@ const Favorites = () => {
           <h3 style={{ marginTop: "70px" }}>Please add your favorite movies</h3>
         )}
         <div className="row">
-          {movies?.map(({ id, poster_path, original_title }) => {
+          {movies?.map(({ movieId, posterBase64, title }) => {
             return (
               <Card
-                id={id}
-                poster_path={poster_path}
-                original_title={original_title}
+                id={movieId}
+                poster_path={posterBase64}
+                original_title={title}
               />
             )
           })}

@@ -47,4 +47,4 @@ const Card = movieData => {
   )
 }
 
-export default Card
+export default Card 

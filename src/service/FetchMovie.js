@@ -2,10 +2,12 @@
 import api from './api'
 
 const fetchMovie = async (movieId) => {
-    const {response} = await api.get(
-        `/movie/${movieId}?api_key=${process.env.REACT_APP_API_KEY}`
+    const {data} = await api.get(
+        `/movie/${movieId}`
     )
-    return response.data
+   
+    return data
+    
 }
 
 

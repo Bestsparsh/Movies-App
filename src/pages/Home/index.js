@@ -4,12 +4,12 @@ import Card from '../../component/Card'
 import { useQuery } from "react-query";
 const Home = () => {
   const [page, setPage] = useState(1)
-  const {data:movies,isLoading} = useQuery(['/movies',page], ()=> fetchPaginatedMovies(page), {
+  const {data:movies,isLoading} = useQuery(["movies",page], ()=> fetchPaginatedMovies(page), {
       keepPreviousData: true
   })
- 
+  
 
-  console.log('movies=>',movies)
+  // console.log('movies=>',movies)
   return (
    <>
    {
@@ -18,12 +18,12 @@ const Home = () => {
     ): (
       <div className='container'>
         <div className='row'>
-          {movies?.map(({id, poster_path, original_title}) => {
+          {movies?.map(({movieId, posterBase64, title}) => {
             return(
               <Card
-              id={id}
-              poster_path={poster_path}
-              original_title={original_title}
+              id={movieId}
+              poster_path={posterBase64}
+              original_title={title}
               />
             )
           })}
