@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import fetchPaginatedMovies from '../../service/paginateMovies'
 import Card from '../../component/Card'
 import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+
 const Home = () => {
+
+
   const [page, setPage] = useState(1)
   const {data:movies,isLoading} = useQuery(["movies",page], ()=> fetchPaginatedMovies(page), {
       keepPreviousData: true

@@ -5,6 +5,7 @@ import { FiArrowLeft } from "react-icons/fi"
 import Card from "../../component/Card"
 import "./style.css"
 
+
 const Favorites = (Logins) => {
   const { movies } = useAppSelector(state => state.favorites)
 
@@ -20,13 +21,15 @@ const Favorites = (Logins) => {
           <h3 style={{ marginTop: "70px" }}>Please add your favorite movies</h3>
         )}
         <div className="row">
-          {movies?.map(({ movieId, posterBase64, title }) => {
+          {movies?.map(({ id, poster_path, original_title }) => {
             return (
               <Card
-                id={movieId}
-                poster_path={posterBase64}
-                original_title={title}
+                id={id}
+                key={id}
+                poster_path={poster_path}
+                original_title={original_title}
               />
+
             )
           })}
         </div>
