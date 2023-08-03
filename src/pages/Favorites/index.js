@@ -16,7 +16,7 @@ const Favorites = (Logins) => {
   return (
     <div className="favorites-container">
       <div className="header">
-        <FiArrowLeft size={24} onCli  ck={() => navigate("/")} />
+        <FiArrowLeft size={24} onClick={() => navigate("/")} />
       </div>
 
       <h4 className="title">Favorites</h4>

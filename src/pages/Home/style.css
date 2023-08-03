@@ -11,6 +11,9 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 20px;
   }
+  .movie-grid .card{
+    width: 200px;
+  }
   
   .pagination {
     display: flex;

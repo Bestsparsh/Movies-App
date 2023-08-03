@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import "./style.css";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addFavorite, removeFavorite } from "../../features/favMovieSlice";
+import favorite from '../../service/favorites';
+import { useQuery } from 'react-query';
+
 
 const Card = ({ id, poster_path, original_title }) => {
   const { movies } = useAppSelector(state => state.favorites);
@@ -13,7 +16,9 @@ const Card = ({ id, poster_path, original_title }) => {
   const isFavoriteMovie = movies.find(movie => movie.id === id);
   const [isFavorites, setIsFavorites] = useState(!!isFavoriteMovie);
   const userId = sessionStorage.getItem("userid");
-
+  const { data: fav } = useQuery(['favorites', userId], () => favorite(userId), {
+    keepPreviousData: true,
+  });
 
   const wishlistItem = {
     createdDate: new Date().toISOString(),
@@ -21,7 +26,8 @@ const Card = ({ id, poster_path, original_title }) => {
   };
 
   const handleFavorites = () => {
-    if (isFavorites) {
+    const exist = fav.some(movie => movie.movieId === id)
+    if (isFavorites || exist) {
       fetch(`http://localhost:8080/wishlist/delete?movieId=${id}&userId=${userId}`, {
         method: "DELETE",
       })
