@@ -1,51 +1,53 @@
-import React, { useState } from 'react'
-import fetchPaginatedMovies from '../../service/paginateMovies'
-import Card from '../../component/Card'
+import React, { useState } from 'react';
+import fetchPaginatedMovies from '../../service/paginateMovies';
+import Card from '../../component/Card';
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
+import "./style.css"; // Import your custom CSS file here
 
 const Home = () => {
+  const [page, setPage] = useState(1);
+  const { data: movies, isLoading } = useQuery(["movies", page], () => fetchPaginatedMovies(page), {
+    keepPreviousData: true
+  });
 
-
-  const [page, setPage] = useState(1)
-  const {data:movies,isLoading} = useQuery(["movies",page], ()=> fetchPaginatedMovies(page), {
-      keepPreviousData: true
-  })
-  
-
-  // console.log('movies=>',movies)
   return (
-   <>
-   {
-    isLoading ? (
-      <h2>Loading...</h2>
-    ): (
-      <div className='container'>
-        <div className='row'>
-          {movies?.map(({movieId, posterBase64, title}) => {
-            return(
+    <div className="home-container">
+      {isLoading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <>
+          <div className="movie-grid">
+            {movies?.map(({ movieId, posterBase64, title }) => (
               <Card
-              id={movieId}
-              poster_path={posterBase64}
-              original_title={title}
+                key={movieId}
+                id={movieId}
+                poster_path={posterBase64}
+                original_title={title}
               />
-            )
-          })}
-        </div>
-         </div>
-    )
-   }
-   <footer style={{margin: '10px'}}>
-    <button className='btn btn-primary ' type='button' onClick={() => setPage((prevPage) => prevPage-1)} disabled={page === 1 ?true:false}>
-      Prev
-    </button>
-    <p style={{display: 'inline', margin: '10px'}}>{page} </p>
-    <button className='btn btn-primary ' type='button' onClick={() => setPage((prevPage) => prevPage+1)} disabled={false}>
-      Next
-    </button>
-   </footer>
-   </> 
-  )
+            ))}
+          </div>
+          <footer className="pagination">
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => setPage((prevPage) => prevPage - 1)}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+            <p className="page-number">{page}</p>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => setPage((prevPage) => prevPage + 1)}
+            >
+              Next
+            </button>
+          </footer>
+        </>
+      )}
+    </div>
+  );
 }
 
-export default Home
+export default Home;
