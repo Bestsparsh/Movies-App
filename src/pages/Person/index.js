@@ -28,7 +28,7 @@ const Person = () => {
             <section id="original_header" class="images inner">
               <div class="poster_wrapper profile">
                 <div class="image_content">
-                  <img class="profile lazyload lazyloaded" src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} data-src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} data-srcset={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} />
+                  <img class="profile lazyload lazyloaded" src={`data:image/jpeg;base64,${person?.imgBase64}`} alt={person?.name} data-src={`data:image/jpeg;base64,${person?.imgBase64}`} data-srcset={`data:image/jpeg;base64,${person?.imgBase64}`} />
 
                 </div>
               </div>
@@ -44,16 +44,16 @@ const Person = () => {
                 <h3><bdi>Personal Info</bdi></h3>
 
                 <section class="facts">
-                  <p><strong><bdi>Known For</bdi></strong> {person?.known_for_department}</p>
-                  <p><strong><bdi>Known Credits</bdi></strong>{person1?.cast.length}</p>
-                  <p><strong><bdi>Gender</bdi></strong> {(person?.gender==2)?'Male':'Female'}</p>
+                  {/* <p><strong><bdi>Known For</bdi></strong> {person?.known_for_department}</p>
+                  <p><strong><bdi>Known Credits</bdi></strong>{person1?.cast.length}</p> */}
+                  <p><strong><bdi>Gender</bdi></strong> {person?.gender}</p>
                   <p class="full">
                     <strong><bdi>Birthday</bdi></strong>
-                    {person?.birthday}
+                    {person?.dateOfBirth}
                   </p>
-                  <p class="full"><strong><bdi>Place of Birth</bdi></strong>{person?.place_of_birth}</p>
+                  {/* <p class="full"><strong><bdi>Place of Birth</bdi></strong>{person?.dateofBirth}</p> */}
 
-                  <p class="full true">
+                  {/* <p class="full true">
                     <strong><bdi>Also Known As</bdi></strong>
                   </p>
                   <ul>
@@ -62,7 +62,7 @@ const Person = () => {
                         {item}
                       </li>
                     ))}
-                  </ul>
+                  </ul> */}
                 </section>
               </section>
             </div>
@@ -81,9 +81,9 @@ const Person = () => {
                 <div dir="auto" class="biography true">
                   <div class="content fade_text">
                     <div class="text initial truncate should_fade">
-                      <p>{person?.biography}</p>
+                      <p>{person?.bio}</p>
                     </div>
-                    <div class="read_more"><a class="read_more no_click" href="#">Read More <span class="glyphicons_v2 chevron-right"></span></a></div>
+                    {/* <div class="read_more"><a class="read_more no_click" href="#">Read More <span class="glyphicons_v2 chevron-right"></span></a></div> */}
                   </div>
                 </div>
               </section>
@@ -94,15 +94,15 @@ const Person = () => {
 
                   <div id="known_for_scroller" class="scroller_wrap should_fade is_fading">
                     <ul class="horizontal_media_list scroller">
-                      {person1?.cast.map((item) => (
+                      {person1?.map((item) => (
                         <li key={item.id} class="account_adult_false item_adult_false">
                           <div class="image">
-                            <a href={`/movie/${item.id}`}>
-                              <img loading="lazy" class="poster" src={`https://www.themoviedb.org/t/p/w150_and_h225_bestv2/${item.poster_path}`} alt={item.original_title} />
+                            <a href={`/movie/${item.movieId}`}>
+                              <img loading="lazy" class="poster" src={`data:image/jpeg;base64,${item.posterBase64}`} alt={item.title} />
 
                             </a>
                           </div>
-                          <p><a class="title" href={`/movie/${item.id}`}><bdi>{item.original_title}</bdi></a></p>
+                          <p><a class="title" href={`/movie/${item.movieId}`}><bdi>{item.title}</bdi></a></p>
 
                         </li>
                       ))}
@@ -116,17 +116,17 @@ const Person = () => {
 
               <section class="full_wrapper credits">
                 <div class="credits_list">
-                  <h3 class="zero">{person?.known_for_department}</h3>
+                  {/* <h3 class="zero">{person?.known_for_department}</h3> */}
 
                   <table class="card credits" border="0" cellspacing="0" cellpadding="0" data-role="tooltip">
                     <tbody>
-                      {person1?.cast.map((item) => (
+                      {person1?.map((item) => (
                         <tr>
-                          <td class="year">{item.release_date}</td>
+                          <td class="year">{item.featuredYear}</td>
                           <td class="seperator"><span data-url={`/movie/${item.id}`} data-id={item.credit_id} data-type="movie" data-slug={item.id} class="glyphicons_v2 circle-empty account_adult_false item_adult_false"></span></td>
                           <td class="role true account_adult_false item_adult_false">
-                            <a class="tip" href="/movie/1102493"><bdi>{item.original_title}</bdi></a>
-                            <span class="group"> as <span class="character">{item.character}</span></span>
+                            <a class="tip" href="/movie/1102493"><bdi>{item.title}</bdi></a>
+                            {/* <span class="group"> as <span class="character">{item.character}</span></span> */}
                           </td>
                         </tr>
                       ))}
