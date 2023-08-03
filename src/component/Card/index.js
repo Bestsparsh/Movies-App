@@ -1,75 +1,62 @@
-import React, { useState } from "react"
-import { AiOutlineStar, AiFillStar } from "react-icons/ai"
-import { Link } from "react-router-dom"
-import "./style.css"
-import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { addFavorite, removeFavorite } from "../../features/favMovieSlice"
+import React, { useState } from "react";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { Link } from "react-router-dom";
+import "./style.css";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { addFavorite, removeFavorite } from "../../features/favMovieSlice";
 
-const Card = movieData => {
-  const { movies } = useAppSelector(state => state.favorites)
-  const userId = sessionStorage.getItem('userid');
+const Card = ({ id, poster_path, original_title }) => {
+  const { movies } = useAppSelector(state => state.favorites);
+     // Change to "userId" if this is the key you're using
 
-  const dispatch = useAppDispatch()
-  const [isFavorites, setIsFavorites] = useState(() => {
-    const isFavoriteMovie = movies.find(movie => movie.id === movieData.id)
-    return !!isFavoriteMovie
-  })
-  const createdDate = new Date(); // Get the current date and time.
+  const dispatch = useAppDispatch();
+  const isFavoriteMovie = movies.find(movie => movie.id === id);
+  const [isFavorites, setIsFavorites] = useState(!!isFavoriteMovie);
+  const userId = sessionStorage.getItem("userid");
+
 
   const wishlistItem = {
-    createdDate: createdDate,
-
-    movieId: movieData.id, // Convert the date to ISO string format.
+    createdDate: new Date().toISOString(),
+    movieId: id,
   };
-
 
   const handleFavorites = () => {
     if (isFavorites) {
-      // dispatch(removeFavorite(movieData.id))
-      // setIsFavorites(prevState => !prevState)
-      fetch(`http://localhost:8080/wishlist/delete?movieId=${movieData.id}&userId=${userId}`, {
+      fetch(`http://localhost:8080/wishlist/delete?movieId=${id}&userId=${userId}`, {
         method: "DELETE",
       })
-        .then((res) => {
-          if (res) {
-             dispatch(removeFavorite(movieData.id))
-      setIsFavorites(prevState => !prevState)
+        .then(res => {
+          if (res.ok) {
+            dispatch(removeFavorite(id));
+            setIsFavorites(false);
           } else {
             console.error("Failed to remove movie from favorites");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error removing movie from favorites:", error);
         });
-    
     } else {
-      // dispatch(addFavorite(movieData))
-      // setIsFavorites(prevState => !prevState)
-      console.log(userId)
-
-      fetch(`http://localhost:8080/wishlist/add?movieId=${movieData.id}&userId=${userId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any additional headers required by your backend.
-      },
-      body: JSON.stringify(wishlistItem),
-    })
-      .then((res) => {
-        if (res) {
-       dispatch(addFavorite(movieData))
-      setIsFavorites(prevState => !prevState)
-        } else {
-          console.error("Failed to add movie to favorites");
-        }
+      fetch(`http://localhost:8080/wishlist/add?movieId=${id}&userId=${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(wishlistItem),
       })
-      .catch((error) => {
-        console.error("Error adding movie to favorites:", error);
-      });
-  }
+        .then(res => {
+          if (res.ok) {
+            dispatch(addFavorite({ id, poster_path, original_title }));
+            setIsFavorites(true);
+          } else {
+            console.error("Failed to add movie to favorites");
+          }
+        })
+        .catch(error => {
+          console.error("Error adding movie to favorites:", error);
+        });
     }
-  
-  // console.log(movieData.poster_path)
+  };
 
   return (
     <div className="col-md-4 col-sm-6">
@@ -83,19 +70,19 @@ const Card = movieData => {
             )}
           </i>
         </h4>
-        <a href={`/movie/${movieData.id}`}>
-          <img
-            src={`data:image/jpeg;base64,${movieData.poster_path}`}
-            alt={movieData.original_title}
-          />
-        </a>
-
-        <Link to={`/movie/${movieData.id}`} style={{ textDecoration: "none" }}>
-          <h5 className="card-title mt-3 mb-3">{movieData.original_title}</h5>
-        </Link>
+        <div className="image-container">
+          <a href={`/movie/${id}`}>
+            <img src={`data:image/jpeg;base64,${poster_path}`} alt={original_title} />
+          </a>
+        </div>
+        <div className="card-container">
+          <Link to={`/movie/${id}`} style={{ textDecoration: "none" }}>
+            <h5 className="card-title mt-3 mb-3">{original_title}</h5>
+          </Link>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Card 
+export default Card;

@@ -1,41 +1,38 @@
-import React from "react"
-import { useNavigate } from "react-router-dom"
-import { useAppSelector } from "../../app/hooks"
-import { FiArrowLeft } from "react-icons/fi"
-import Card from "../../component/Card"
-import "./style.css"
-
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
+import Card from "../../component/Card";
+import favorite from '../../service/favorites';
+import { useQuery } from 'react-query';
+import "./style.css";
 
 const Favorites = (Logins) => {
-  const { movies } = useAppSelector(state => state.favorites)
+  const userId = sessionStorage.getItem("userid");
+  const { data: movies } = useQuery(['favorites', userId], () => favorite(userId), {
+    keepPreviousData: true,
+  });
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
   return (
-    <>
-      <div className="container">
-        <div className="header">
-          <FiArrowLeft size={24} onClick={() => navigate("/")} />
-        </div>
-        <h4 className="title">Favorites</h4>
-        {!movies.length && (
-          <h3 style={{ marginTop: "70px" }}>Please add your favorite movies</h3>
-        )}
-        <div className="row">
-          {movies?.map(({ id, poster_path, original_title }) => {
-            return (
-              <Card
-                id={id}
-                key={id}
-                poster_path={poster_path}
-                original_title={original_title}
-              />
-
-            )
-          })}
-        </div>
+    <div className="favorites-container">
+      <div className="header">
+        <FiArrowLeft size={24} onCli  ck={() => navigate("/")} />
       </div>
-    </>
-  )
+
+      <h4 className="title">Favorites</h4>
+
+      <div className="favorites-list">
+        {movies?.map((item) => (
+          <Card
+            id={item.movieId}
+            key={item.movieId}
+            poster_path={item.posterBase64}
+            original_title={item.title}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default Favorites
+export default Favorites;

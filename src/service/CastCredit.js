@@ -1,5 +1,5 @@
 import api from './api'
-console.log('hello')
+// console.log('hello')
 const movieCredit = async (movieId) => {
     const {data} = await api.get(
         `api/movie/${movieId}/actors`
